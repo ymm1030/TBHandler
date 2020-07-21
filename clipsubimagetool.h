@@ -29,7 +29,9 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *) override;
-    void hideEvent(QHideEvent *) override;
+
+private:
+    void reset();
 
 private:
     ImageArea*      m_imageArea;

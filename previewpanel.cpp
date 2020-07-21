@@ -1,5 +1,7 @@
 #include <QLabel>
 #include <QPushButton>
+#include <QGuiApplication>
+#include <QScreen>
 #include "previewpanel.h"
 
 PreviewPanel::PreviewPanel(QWidget *parent)
@@ -14,6 +16,10 @@ PreviewPanel::PreviewPanel(QWidget *parent)
     setWindowTitle("预览");
     m_currentImage = new QLabel(this);
     m_currentImage->setScaledContents(true);
+    QPalette palette;
+    m_currentImage->setAutoFillBackground(true);
+    palette.setBrush(m_currentImage->backgroundRole(), Qt::red);
+    m_currentImage->setPalette(palette);
 
     m_prev = new QPushButton(this);
     m_prev->setText("上一张");
@@ -35,11 +41,11 @@ PreviewPanel::PreviewPanel(QWidget *parent)
     m_delete->setEnabled(false);
     connect(m_delete, SIGNAL(clicked()), this, SLOT(requireDelete()));
 
-    m_currentImage->setGeometry(10, 10, 730, 730);
-    m_prev->setGeometry(100, 750, 150, 30);
-    m_delete->setGeometry(300, 750, 150, 30);
-    m_next->setGeometry(500, 750, 150, 30);
-    setFixedSize(750, 790);
+    m_currentImage->setGeometry(10, 10, 584, 584);
+    m_prev->setGeometry(40, 604, 150, 30);
+    m_delete->setGeometry(227, 604, 150, 30);
+    m_next->setGeometry(414, 604, 150, 30);
+    setFixedSize(604, 644);
 }
 
 void PreviewPanel::loadImages(const QList<QImage> &images, bool lastCanBeDelete)
@@ -101,11 +107,6 @@ void PreviewPanel::requireDelete()
 
     if (m_data.empty()) {
         close();
-//        m_currentImage->setPixmap(QPixmap());
-//        m_currentImage->setGeometry(10, 10, 730, 730);
-//        m_prev->setEnabled(false);
-//        m_delete->setEnabled(false);
-//        m_next->setEnabled(false);
         return;
     }
 
@@ -126,10 +127,10 @@ void PreviewPanel::showIndex(int idx)
 {
     m_current = idx;
     QImage img = m_data.at(idx);
-    m_currentImage->resize(img.width(), img.height());
+    m_currentImage->resize(584, img.height()*0.8);
     m_currentImage->setPixmap(QPixmap::fromImage(img));
-    int y = (730 - img.height())/2;
-    m_currentImage->move(10, y);
+    int y = (584 - img.height()*0.8)/2;
+    m_currentImage->move(10, y+10);
 }
 
 void PreviewPanel::closeEvent(QCloseEvent *)

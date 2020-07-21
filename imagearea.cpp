@@ -79,6 +79,12 @@ QImage ImageArea::getClippedImage() const
     return image;
 }
 
+void ImageArea::reset()
+{
+    m_label->setPixmap(QPixmap());
+    m_label->setGeometry(0, 0, 0, 0);
+}
+
 void ImageArea::resizeEvent(QResizeEvent *)
 {
     if (m_isMain) {
@@ -88,12 +94,6 @@ void ImageArea::resizeEvent(QResizeEvent *)
         m_resizePercent = float(width()) / 730.0f;
     }
     percentChanged(m_percent);
-}
-
-void ImageArea::hideEvent(QHideEvent *)
-{
-    m_label->setPixmap(QPixmap());
-    m_label->setGeometry(0, 0, 0, 0);
 }
 
 void ImageArea::mousePressEvent(QMouseEvent *e)

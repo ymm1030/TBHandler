@@ -26,7 +26,8 @@ SOURCES += \
     previewpanel.cpp \
     sizecontroller.cpp \
     submarktool.cpp \
-    textarea.cpp
+    textarea.cpp \
+    textlabel.cpp
 
 HEADERS += \
     clipimagetool.h \
@@ -38,7 +39,8 @@ HEADERS += \
     previewpanel.h \
     sizecontroller.h \
     submarktool.h \
-    textarea.h
+    textarea.h \
+    textlabel.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

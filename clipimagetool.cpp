@@ -75,6 +75,7 @@ void ClipImageTool::requireAddMarks()
         return;
     }
     emit addMarks();
+    reset();
 }
 
 void ClipImageTool::resizeEvent(QResizeEvent *)
@@ -86,9 +87,10 @@ void ClipImageTool::resizeEvent(QResizeEvent *)
     m_nextBtn->setGeometry(height() + 60, 400, 200, 50);
 }
 
-void ClipImageTool::hideEvent(QHideEvent *)
+void ClipImageTool::reset()
 {
     m_nextBtn->setEnabled(false);
     m_sizeController->setEnabled(false);
     m_selectedFileName = QString();
+    m_imageArea->reset();
 }

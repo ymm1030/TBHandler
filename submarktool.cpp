@@ -107,6 +107,7 @@ void SubMarkTool::finishMarks()
     for (int i = 0; i < m_images.size(); ++i) {
         QImage img = m_images.at(i);
         QPainter painter(&img);
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
         QPoint p = m_markPoints.at(i);
         QRect r = getRect(i);
         QPoint realPoint((p.x()-r.x())/m_scaled, (p.y()-r.y())/m_scaled);
@@ -116,6 +117,7 @@ void SubMarkTool::finishMarks()
     }
 
     emit enterNext();
+    reset();
 }
 
 void SubMarkTool::paintEvent(QPaintEvent *)
@@ -125,6 +127,7 @@ void SubMarkTool::paintEvent(QPaintEvent *)
     }
 
     QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
     const QImage& img = m_images.at(m_current);
     QRect r = getCurrentRect();
     if (!img.size().isEmpty()) {
@@ -174,17 +177,6 @@ void SubMarkTool::mousePressEvent(QMouseEvent *e)
         checkMarkPoints();
         update();
     }
-}
-
-void SubMarkTool::hideEvent(QHideEvent *)
-{
-    m_current = -1;
-    m_images.clear();
-    m_markPoints.clear();
-    m_markPoint = QPoint();
-    m_finishBtn->setEnabled(false);
-    m_prevBtn->setEnabled(false);
-    m_nextBtn->setEnabled(false);
 }
 
 bool SubMarkTool::isCurrentValid() const
@@ -246,4 +238,15 @@ void SubMarkTool::checkMarkPoints()
     }
 
     m_finishBtn->setEnabled(true);
+}
+
+void SubMarkTool::reset()
+{
+    m_current = -1;
+    m_images.clear();
+    m_markPoints.clear();
+    m_markPoint = QPoint();
+    m_finishBtn->setEnabled(false);
+    m_prevBtn->setEnabled(false);
+    m_nextBtn->setEnabled(false);
 }

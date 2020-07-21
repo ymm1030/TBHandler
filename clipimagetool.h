@@ -25,7 +25,9 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *) override;
-    void hideEvent(QHideEvent *) override;
+
+private:
+    void reset();
 
 private:
     QPushButton*    m_openBtn;

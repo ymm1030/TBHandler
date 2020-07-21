@@ -66,7 +66,7 @@ DocEditor::DocEditor(QWidget *parent)
     m_finishBtn->setFont(ft);
     m_finishBtn->setText("完成");
     m_finishBtn->setEnabled(false);
-    connect(m_finishBtn, SIGNAL(clicked()), this, SIGNAL(enterNext()));
+    connect(m_finishBtn, SIGNAL(clicked()), this, SLOT(requireEnterNext()));
 
     m_colorBtn = new QPushButton(this);
     m_colorBtn->setFont(ft);
@@ -199,6 +199,7 @@ void DocEditor::saveFile()
     QImage img(750, th, QImage::Format_RGBA8888);
     img.fill(Qt::white);
     QPainter painter(&img);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
 
     th = 10;
     for(int i = 0; i < m_images.size(); ++i) {
@@ -213,10 +214,16 @@ void DocEditor::saveFile()
         }
     }
 
-    img.save(name, "jpg");
+    img.save(name, "jpg", 95);
     m_lastDir = QFileInfo(name).dir().absolutePath();
     QMessageBox::information(this, "提示", "保存成功！");
     m_finishBtn->setEnabled(true);
+}
+
+void DocEditor::requireEnterNext()
+{
+    emit enterNext();
+    reset();
 }
 
 void DocEditor::resizeEvent(QResizeEvent *)
@@ -238,21 +245,6 @@ void DocEditor::resizeEvent(QResizeEvent *)
     m_nextBtn->setGeometry(w + 50, 470, 150, 30);
     m_saveBtn->setGeometry(w+50, 550, 150, 30);
     m_finishBtn->setGeometry(w+50, 600, 150, 30);
-}
-
-void DocEditor::hideEvent(QHideEvent *)
-{
-    m_images.clear();
-    m_data.clear();
-    m_data.push_back(TextStruct());
-    m_current = 0;
-    m_richEdit->clear();
-    QPalette palette;
-    palette.setBrush(m_colorLabel->backgroundRole(), Qt::black);
-    m_colorLabel->setPalette(palette);
-    m_nextBtn->setEnabled(false);
-    m_prevBtn->setEnabled(false);
-    m_finishBtn->setEnabled(false);
 }
 
 void DocEditor::checkCurrent()
@@ -282,4 +274,19 @@ void DocEditor::showIndex(int index)
     QPalette palette;
     palette.setBrush(m_colorLabel->backgroundRole(), ts.color);
     m_colorLabel->setPalette(palette);
+}
+
+void DocEditor::reset()
+{
+    m_images.clear();
+    m_data.clear();
+    m_data.push_back(TextStruct());
+    m_current = 0;
+    m_richEdit->clear();
+    QPalette palette;
+    palette.setBrush(m_colorLabel->backgroundRole(), Qt::black);
+    m_colorLabel->setPalette(palette);
+    m_nextBtn->setEnabled(false);
+    m_prevBtn->setEnabled(false);
+    m_finishBtn->setEnabled(false);
 }

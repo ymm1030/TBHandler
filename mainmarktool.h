@@ -22,12 +22,15 @@ public slots:
     void chooseColor();
     void saveFile();
     void blueWhiteChanged(int idx);
+    void requireEnterNext();
 
 protected:
     void paintEvent(QPaintEvent *) override;
     void resizeEvent(QResizeEvent *) override;
     void mousePressEvent(QMouseEvent *e) override;
-    void hideEvent(QHideEvent *) override;
+
+private:
+    void reset();
 
 private:
     QPushButton*       m_colorBtn;

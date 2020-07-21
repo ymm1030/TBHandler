@@ -27,7 +27,6 @@ protected:
     void paintEvent(QPaintEvent *) override;
     void resizeEvent(QResizeEvent *) override;
     void mousePressEvent(QMouseEvent *e) override;
-    void hideEvent(QHideEvent *) override;
 
 private:
     bool isCurrentValid() const;
@@ -35,6 +34,7 @@ private:
     QRect getRect(int index) const;
     void showIndex(int index);
     void checkMarkPoints();
+    void reset();
 
 private:
     QPushButton*       m_colorBtn;

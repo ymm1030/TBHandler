@@ -163,6 +163,7 @@ void ClipSubImageTool::finished()
         m_imageList.push_back(img);
     }
     emit enterNext();
+    reset();
 }
 
 void ClipSubImageTool::resizeEvent(QResizeEvent *)
@@ -180,11 +181,12 @@ void ClipSubImageTool::resizeEvent(QResizeEvent *)
     m_finish->setGeometry(height() + 60, 450, 200, 30);
 }
 
-void ClipSubImageTool::hideEvent(QHideEvent *)
+void ClipSubImageTool::reset()
 {
     m_horizon->setEnabled(false);
     m_preview->setEnabled(false);
     m_finish->setEnabled(false);
     m_imageList.clear();
     m_imageShowing = false;
+    m_imageArea->reset();
 }

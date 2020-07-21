@@ -5,7 +5,7 @@
 #include "doceditor.h"
 
 class TextRender;
-class QLabel;
+class TextLabel;
 class TextArea : public QScrollArea
 {
     Q_OBJECT
@@ -24,7 +24,7 @@ private:
 
 private:
     QWidget*             m_container;
-    QList<QLabel*>       m_labels;
+    QList<TextLabel*>    m_labels;
     QList<TextStruct>    m_data;
 };
 

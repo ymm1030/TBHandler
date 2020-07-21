@@ -38,14 +38,15 @@ public slots:
     void showNext();
     void showPrev();
     void saveFile();
+    void requireEnterNext();
 
 protected:
     void resizeEvent(QResizeEvent*) override;
-    void hideEvent(QHideEvent *) override;
 
 private:
     void checkCurrent();
     void showIndex(int index);
+    void reset();
 
 private:
     QList<QImage>       m_images;

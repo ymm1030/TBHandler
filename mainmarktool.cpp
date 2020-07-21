@@ -53,7 +53,7 @@ MainMarkTool::MainMarkTool(QWidget *parent)
     m_finishBtn->setText("下一张");
     m_finishBtn->setFont(ft);
     m_finishBtn->setEnabled(false);
-    connect(m_finishBtn, SIGNAL(clicked()), this, SIGNAL(enterNext()));
+    connect(m_finishBtn, SIGNAL(clicked()), this, SLOT(requireEnterNext()));
 
     m_blueMark = QImage("bluemark.png");
     m_whiteMark = QImage("whitemark.png");
@@ -110,6 +110,7 @@ void MainMarkTool::saveFile()
     if (!name.isEmpty()) {
         QImage result = m_mainImage.copy();
         QPainter painter(&result);
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
         painter.drawImage(result.rect(), *m_leftopMark);
         QPoint realPoint((m_markPoint.x()-m_paintRect.x())/m_scaled, (m_markPoint.y()-m_paintRect.y())/m_scaled);
         QRect hr(realPoint.x()-s_markSize.width()/2, realPoint.y()-s_markSize.height()/2, s_markSize.width(), s_markSize.height());
@@ -119,6 +120,12 @@ void MainMarkTool::saveFile()
         QMessageBox::information(this, "提示", "保存成功！");
         m_finishBtn->setEnabled(true);
     }
+}
+
+void MainMarkTool::requireEnterNext()
+{
+    emit enterNext();
+    reset();
 }
 
 void MainMarkTool::blueWhiteChanged(int idx)
@@ -135,6 +142,7 @@ void MainMarkTool::blueWhiteChanged(int idx)
 void MainMarkTool::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     if (!m_mainImage.size().isEmpty()) {
         painter.drawImage(m_paintRect, m_mainImage);
         painter.drawImage(m_paintRect, *m_leftopMark);
@@ -174,7 +182,7 @@ void MainMarkTool::mousePressEvent(QMouseEvent *e)
     }
 }
 
-void MainMarkTool::hideEvent(QHideEvent *)
+void MainMarkTool::reset()
 {
     m_markPoint = QPoint(0, 0);
     m_finishBtn->setEnabled(false);

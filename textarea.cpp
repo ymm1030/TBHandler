@@ -3,6 +3,7 @@
 #include <QFontMetrics>
 #include <QScrollBar>
 #include "textarea.h"
+#include "textlabel.h"
 
 TextArea::TextArea(QWidget *parent)
     : QScrollArea(parent)
@@ -13,6 +14,7 @@ TextArea::TextArea(QWidget *parent)
     QFont ft = font();
     ft.setFamily("DFFangYuanW7-GB");
     ft.setPointSize(18);
+    ft.setLetterSpacing(QFont::PercentageSpacing, 105);
     setFont(ft);
 
     setWidget(m_container);
@@ -27,11 +29,11 @@ void TextArea::dataChanged(const QList<TextStruct> &data)
 {
     m_data = data;
     while (m_labels.size() < data.size()) {
-        m_labels.push_back(new QLabel(m_container));
+        m_labels.push_back(new TextLabel(m_container));
     }
 
     while (m_labels.size() > data.size()) {
-        QLabel* label = m_labels.back();
+        TextLabel* label = m_labels.back();
         delete label;
         m_labels.pop_back();
     }
@@ -54,17 +56,16 @@ void TextArea::ajustLabels()
     int h = 0;
     int maxw = 710;
     for (int i = 0; i < m_labels.size(); ++i) {
-        QLabel* label = m_labels.at(i);
+        TextLabel* label = m_labels.at(i);
         label->show();
         label->setFont(font());
         TextStruct ts = m_data.at(i);
         label->setText(ts.text);
-        label->setWordWrap(true);
         palette.setColor(label->foregroundRole(), ts.color);
         label->setPalette(palette);
         QRect r(0, 0, 710, 710);
-        r = fm.boundingRect(r, Qt::TextWordWrap, ts.text);
-        label->resize(r.size());
+        r = label->boundingRect();
+        label->resize(r.width(), r.height()+segmentSpacing);
         label->move(0, h);
         h += label->height() + segmentSpacing;
         if (maxw < r.width()) {

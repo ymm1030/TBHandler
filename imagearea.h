@@ -16,6 +16,7 @@ public:
 
     QImage getClippedImage() const;
 
+    void reset();
 
 signals:
 
@@ -26,7 +27,6 @@ protected:
     void resizeEvent(QResizeEvent *) override;
     void mousePressEvent(QMouseEvent* e) override;
     void mouseMoveEvent(QMouseEvent* e) override;
-    void hideEvent(QHideEvent*) override;
 
 private:
     QLabel*     m_label;
