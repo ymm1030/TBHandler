@@ -9,7 +9,7 @@ struct TextStruct
     QColor          color;
 
     TextStruct()
-        : color(Qt::black)
+        : color(QColor(27, 27, 27))
     {
     }
 };
@@ -38,6 +38,7 @@ public slots:
     void showNext();
     void showPrev();
     void saveFile();
+    void restoreDefaultColors();
     void requireEnterNext();
 
 protected:
@@ -61,6 +62,7 @@ private:
     QPushButton*        m_prevBtn;
     QPushButton*        m_saveBtn;
     QPushButton*        m_finishBtn;
+    QPushButton*        m_defaultColorBtn;
     QComboBox*          m_fontSelector;
     int                 m_current;
     QString             m_lastDir;

@@ -76,8 +76,13 @@ DocEditor::DocEditor(QWidget *parent)
     m_colorLabel = new QLabel(this);
     m_colorLabel->setAutoFillBackground(true);
     QPalette palette;
-    palette.setBrush(m_colorLabel->backgroundRole(), Qt::black);
+    palette.setBrush(m_colorLabel->backgroundRole(), QColor(27, 27, 27));
     m_colorLabel->setPalette(palette);
+
+    m_defaultColorBtn = new QPushButton(this);
+    m_defaultColorBtn->setFont(ft);
+    m_defaultColorBtn->setText("一键设置默认色");
+    connect(m_defaultColorBtn, SIGNAL(clicked()), this, SLOT(restoreDefaultColors()));
 
     m_fontSelector = new QComboBox(this);
     m_fontSelector->addItem("华康方圆体W7");
@@ -134,12 +139,24 @@ void DocEditor::chooseColor()
 
 void DocEditor::addSegment()
 {
-    QColor c = m_data.back().color;
-    m_data.push_back(TextStruct());
+    TextStruct ts;
+    if (m_data.size() == 1) {
+        ts.color = QColor(95, 82, 160);
+    }
+    else if (m_data.size() == 2) {
+        ts.color = QColor(137, 87, 161);
+    }
+    else if (m_data.size() == 3) {
+        ts.color = QColor(234, 104, 162);
+    }
+    m_data.push_back(ts);
     m_current = m_data.size()-1;
     m_richEdit->clear();
-    m_data[m_current].color = c;
     checkCurrent();
+
+    QPalette palette;
+    palette.setBrush(m_colorLabel->backgroundRole(), ts.color);
+    m_colorLabel->setPalette(palette);
 }
 
 void DocEditor::removeSegment()
@@ -220,6 +237,32 @@ void DocEditor::saveFile()
     m_finishBtn->setEnabled(true);
 }
 
+void DocEditor::restoreDefaultColors()
+{
+    for (int i = 0; i < m_data.size(); ++i) {
+        switch (i) {
+        case 0:
+            m_data[i].color = QColor(27, 27, 27);
+            break;
+        case 1:
+            m_data[i].color = QColor(95, 82, 160);
+            break;
+        case 2:
+            m_data[i].color = QColor(137, 87, 161);
+            break;
+        case 3:
+            m_data[i].color = QColor(234, 104, 162);
+            break;
+        default:
+            break;
+        }
+    }
+    m_textArea->dataChanged(m_data);
+    QPalette palette;
+    palette.setBrush(m_colorLabel->backgroundRole(), m_data[m_current].color);
+    m_colorLabel->setPalette(palette);
+}
+
 void DocEditor::requireEnterNext()
 {
     emit enterNext();
@@ -243,8 +286,9 @@ void DocEditor::resizeEvent(QResizeEvent *)
     m_deleteBtn->setGeometry(w+50, 370, 150, 30);
     m_prevBtn->setGeometry(w + 50, 420, 150, 30);
     m_nextBtn->setGeometry(w + 50, 470, 150, 30);
-    m_saveBtn->setGeometry(w+50, 550, 150, 30);
-    m_finishBtn->setGeometry(w+50, 600, 150, 30);
+    m_defaultColorBtn->setGeometry(w+50, 520, 150, 30);
+    m_saveBtn->setGeometry(w+50, 600, 150, 30);
+    m_finishBtn->setGeometry(w+50, 650, 150, 30);
 }
 
 void DocEditor::checkCurrent()

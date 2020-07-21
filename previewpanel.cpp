@@ -16,10 +16,6 @@ PreviewPanel::PreviewPanel(QWidget *parent)
     setWindowTitle("预览");
     m_currentImage = new QLabel(this);
     m_currentImage->setScaledContents(true);
-    QPalette palette;
-    m_currentImage->setAutoFillBackground(true);
-    palette.setBrush(m_currentImage->backgroundRole(), Qt::red);
-    m_currentImage->setPalette(palette);
 
     m_prev = new QPushButton(this);
     m_prev->setText("上一张");
