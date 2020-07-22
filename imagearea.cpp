@@ -69,12 +69,12 @@ QImage ImageArea::getClippedImage() const
     QImage image;
     if (m_isMain) {
         image = m_image.copy(lefttop.x(), lefttop.y(), 800/m_percent, 800/m_percent);
-        image = image.scaled(800, 800);
+        image = image.scaled(800, 800, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     }
     else {
         int h = height() / m_resizePercent;
         image = m_image.copy(lefttop.x(), lefttop.y(), 730/m_percent, h/m_percent);
-        image = image.scaled(730, h);
+        image = image.scaled(730, h, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     }
     return image;
 }
