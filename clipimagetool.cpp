@@ -37,6 +37,7 @@ ClipImageTool::ClipImageTool(QWidget *parent)
     connect(m_openBtn, SIGNAL(clicked()), this, SLOT(openFile()));
 
     connect(m_sizeController, SIGNAL(percentChanged(float)), m_imageArea, SLOT(percentChanged(float)));
+    connect(m_imageArea, SIGNAL(notifyMinimumPercent(float)), m_sizeController, SLOT(notifyMinimumPercent(float)));
 
     m_instruction->setText("通过缩放和移动来调整左边框内的图片，能够看到的部分就是最终导出的图片，其余部分会被丢弃。完成之后点击下一步进入打水印环节。");
     m_instruction->setWordWrap(true);

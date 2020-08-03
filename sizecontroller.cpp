@@ -10,6 +10,7 @@ SizeController::SizeController(QWidget *parent, bool isHorizontal)
     , m_decBtn(nullptr)
     , m_incBtn(nullptr)
     , m_horizontal(isHorizontal)
+    , m_minimumPercent(1.0f)
 {
     m_pbar = new QProgressBar(this);
     m_decBtn = new QPushButton(this);
@@ -48,6 +49,12 @@ void SizeController::setValue(int v)
             v = v-1;
         }
     }
+    if (m_horizontal) {
+        int v1 = m_pbar->maximum() * m_minimumPercent;
+        if (v < v1) {
+           v = v1;
+        }
+    }
     m_pbar->setValue(v);
 }
 
@@ -69,6 +76,15 @@ void SizeController::incValue()
 void SizeController::decValue()
 {
     decValue(m_pbar->maximum()/100);
+}
+
+void SizeController::notifyMinimumPercent(float f)
+{
+    m_minimumPercent = f;
+    float f1 = float(m_pbar->value()) / float(m_pbar->maximum());
+    if (f1 < f) {
+        setValue(m_pbar->maximum() * f);
+    }
 }
 
 void SizeController::resizeEvent(QResizeEvent *)

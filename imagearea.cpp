@@ -5,7 +5,7 @@
 #include "imagearea.h"
 
 ImageArea::ImageArea(QWidget* parent, bool isMain)
-    : QScrollArea(parent)
+    : QWidget(parent)
     , m_label(nullptr)
     , m_percent(1.0f)
     , m_resizePercent(1.0f)
@@ -14,7 +14,7 @@ ImageArea::ImageArea(QWidget* parent, bool isMain)
     m_label = new QLabel(this);
     m_label->setScaledContents(true);
 
-    setWidget(m_label);
+//    setWidget(m_label);
 
     QPalette palette;
     palette.setBrush(QPalette::Background, Qt::red);
@@ -32,19 +32,52 @@ void ImageArea::loadImage(const QString &path)
     m_image = QImage(path);
     m_label->setPixmap(QPixmap::fromImage(m_image));
     m_label->resize(m_image.size());
+    calcMinimumPercent();
 }
 
 void ImageArea::percentChanged(float p)
 {
     m_percent = p;
     float f = p * m_resizePercent;
-    int newWidth = m_image.width()*f;
-    int newHeight = m_image.height()*f;
+    int newWidth = qRound(m_image.width()*f);
+    int newHeight = qRound(m_image.height()*f);
+
+    int lap1 = newWidth - width();
+    int lap2 = newHeight - height();
+    if (lap1 < 0 || lap2 < 0) {
+        if (lap1 < lap2) {
+            int lap = qAbs(lap1);
+            newHeight += ((float)m_image.height()/(float)m_image.width()) * lap;
+            newWidth += lap;
+        }
+        else {
+            int lap = qAbs(lap2);
+            newWidth += ((float)m_image.width()/(float)m_image.height()) * lap;
+            newHeight += lap;
+        }
+    }
 
     int offsetX = (m_label->width() - newWidth) / 2;
     int offsetY = (m_label->height() - newHeight) / 2;
 
-    m_label->setGeometry(m_label->x() + offsetX, m_label->y() + offsetY, newWidth, newHeight);
+    int x = m_label->x() + offsetX;
+    int y = m_label->y() + offsetY;
+
+    if (x > 0) {
+        x = 0;
+    }
+    if (y > 0) {
+        y = 0;
+    }
+
+    if (x + newWidth < width()) {
+        x = width() - newWidth;
+    }
+    if (y + newHeight < height()) {
+        y = height() - newHeight;
+    }
+
+    m_label->setGeometry(x, y, newWidth, newHeight);
 }
 
 QImage ImageArea::getClippedImage() const
@@ -53,18 +86,18 @@ QImage ImageArea::getClippedImage() const
     float f = m_percent * m_resizePercent;
     lefttop = QPoint(lefttop.x()/f, lefttop.y()/f);
 
-    if (m_isMain) {
-        if (lefttop.y() + 800/m_percent > m_image.height()
-            || lefttop.x() + 800/m_percent > m_image.width()) {
-           return QImage();
-        }
-    }
-    else {
-        if (lefttop.x() + 730/m_percent > m_image.width()
-            || lefttop.y() + height()/(m_percent*m_resizePercent) > m_image.height()) {
-            return QImage();
-        }
-    }
+//    if (m_isMain) {
+//        if (lefttop.y() + 800/m_percent > m_image.height()
+//            || lefttop.x() + 800/m_percent > m_image.width()) {
+//           return QImage();
+//        }
+//    }
+//    else {
+//        if (lefttop.x() + 730/m_percent > m_image.width()
+//            || lefttop.y() + height()/(m_percent*m_resizePercent) > m_image.height()) {
+//            return QImage();
+//        }
+//    }
 
     QImage image;
     if (m_isMain) {
@@ -94,6 +127,7 @@ void ImageArea::resizeEvent(QResizeEvent *)
         m_resizePercent = float(width()) / 730.0f;
     }
     percentChanged(m_percent);
+    calcMinimumPercent();
 }
 
 void ImageArea::mousePressEvent(QMouseEvent *e)
@@ -103,7 +137,35 @@ void ImageArea::mousePressEvent(QMouseEvent *e)
 
 void ImageArea::mouseMoveEvent(QMouseEvent *e)
 {
-//    int offX = e->x() - m_start.x();
-//    int offY = e->y() - m_start.y();
+    int offX = e->x() - m_start.x();
+    int offY = e->y() - m_start.y();
     m_start = e->pos();
+    int x = m_label->x() + offX;
+    int y = m_label->y() + offY;
+    if (x > 0) {
+        x = 0;
+    }
+    if (y > 0) {
+        y = 0;
+    }
+
+    if (x + m_label->width() < width()) {
+        x = width() - m_label->width();
+    }
+    if (y + m_label->height() < height()) {
+        y = height() - m_label->height();
+    }
+    m_label->move(x, y);
+}
+
+void ImageArea::calcMinimumPercent()
+{
+    float minF = 0.0f;
+    if (m_image.width() > m_image.height()) {
+        minF = (float)height()/(float)m_image.height()/m_resizePercent;
+    }
+    else {
+        minF = (float)width()/(float)m_image.width()/m_resizePercent;
+    }
+    emit notifyMinimumPercent(minF);
 }

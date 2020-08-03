@@ -1,10 +1,10 @@
 #ifndef IMAGEAREA_H
 #define IMAGEAREA_H
 
-#include <QScrollArea>
+#include <QWidget>
 
 class QLabel;
-class ImageArea : public QScrollArea
+class ImageArea : public QWidget
 {
     Q_OBJECT
 public:
@@ -18,7 +18,10 @@ public:
 
     void reset();
 
+    void calcMinimumPercent();
+
 signals:
+    void notifyMinimumPercent(float);
 
 public slots:
     void percentChanged(float p);

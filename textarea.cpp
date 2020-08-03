@@ -15,6 +15,7 @@ TextArea::TextArea(QWidget *parent)
     ft.setFamily("DFFangYuanW7-GB");
     ft.setPointSize(18);
     ft.setLetterSpacing(QFont::PercentageSpacing, 105);
+    ft.setStyleStrategy(QFont::PreferAntialias);
     setFont(ft);
 
     setWidget(m_container);

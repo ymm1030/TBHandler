@@ -106,7 +106,8 @@ void MainMarkTool::saveFile()
         return;
     }
 
-    QString name = QFileDialog::getSaveFileName(this, "保存文件", QDir(m_lastDir).filePath(m_selectedFileName), "Images (*.jpg *.jpeg *.png)");
+    QDir dirtmp(m_lastDir);
+    QString name = QFileDialog::getSaveFileName(this, "保存文件", QDir(m_lastDir).filePath(dirtmp.dirName() + ".png"), "Images (*.jpg *.jpeg *.png)");
     if (!name.isEmpty()) {
         QImage result = m_mainImage.copy();
         QPainter painter(&result);
@@ -115,7 +116,7 @@ void MainMarkTool::saveFile()
         QPoint realPoint((m_markPoint.x()-m_paintRect.x())/m_scaled, (m_markPoint.y()-m_paintRect.y())/m_scaled);
         QRect hr(realPoint.x()-s_markSize.width()/2, realPoint.y()-s_markSize.height()/2, s_markSize.width(), s_markSize.height());
         painter.drawImage(hr, m_markImage);
-        result.save(name, "jpg");
+        result.save(name, "png");
         m_lastDir = QFileInfo(name).dir().absolutePath();
         QMessageBox::information(this, "提示", "保存成功！");
         m_finishBtn->setEnabled(true);

@@ -197,7 +197,7 @@ void DocEditor::showPrev()
 
 void DocEditor::saveFile()
 {
-    QString name = QFileDialog::getSaveFileName(this, "保存文件", QDir(m_lastDir).filePath("描述.jpg"), "Images (*.jpg *.jpeg *.png)");
+    QString name = QFileDialog::getSaveFileName(this, "保存文件", QDir(m_lastDir).filePath("描述.png"), "Images (*.jpg *.jpeg *.png)");
 
     if (name.isEmpty()) {
         return;
@@ -231,7 +231,7 @@ void DocEditor::saveFile()
         }
     }
 
-    img.save(name, "jpg", 95);
+    img.save(name, "png");
     m_lastDir = QFileInfo(name).dir().absolutePath();
     QMessageBox::information(this, "提示", "保存成功！");
     m_finishBtn->setEnabled(true);

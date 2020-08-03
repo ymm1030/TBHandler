@@ -25,6 +25,7 @@ signals:
 public slots:
     void incValue();
     void decValue();
+    void notifyMinimumPercent(float f);
 
 private slots:
     void valueChanged(int v);
@@ -39,6 +40,7 @@ private:
     QPushButton*    m_decBtn;
     QPushButton*    m_incBtn;
     bool            m_horizontal;
+    float           m_minimumPercent;
 };
 
 #endif // SIZECONTROLLER_H
