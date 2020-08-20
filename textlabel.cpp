@@ -8,7 +8,6 @@ static int s_line_spacing = 10;
 TextLabel::TextLabel(QWidget* parent)
     : QLabel(parent)
 {
-
 }
 
 void TextLabel::setText(const QString &text)
@@ -58,12 +57,16 @@ void TextLabel::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::TextAntialiasing);
+    QPen pen = painter.pen();
 
     QFontMetrics fm(font());
     int h = 0;
     for (int i = 0; i < m_lines.size(); ++i) {
         QString s = m_lines.at(i);
         h += fm.boundingRect(s).height();
+        painter.setPen(QColor(17, 17, 17, 50));
+        painter.drawText(1, h+1, s);
+        painter.setPen(pen);
         painter.drawText(0, h, s);
         h += s_line_spacing;
     }

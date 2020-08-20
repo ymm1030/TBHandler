@@ -22,6 +22,8 @@ public:
 
 signals:
     void notifyMinimumPercent(float);
+    void incValue();
+    void decValue();
 
 public slots:
     void percentChanged(float p);
@@ -30,6 +32,7 @@ protected:
     void resizeEvent(QResizeEvent *) override;
     void mousePressEvent(QMouseEvent* e) override;
     void mouseMoveEvent(QMouseEvent* e) override;
+    void wheelEvent(QWheelEvent* e) override;
 
 private:
     QLabel*     m_label;

@@ -1,6 +1,7 @@
 #include <QLabel>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QScrollBar>
 #include "imagearea.h"
 
@@ -156,6 +157,16 @@ void ImageArea::mouseMoveEvent(QMouseEvent *e)
         y = height() - m_label->height();
     }
     m_label->move(x, y);
+}
+
+void ImageArea::wheelEvent(QWheelEvent *e)
+{
+    if (e->delta() < 0) {
+        emit decValue();
+    }
+    else {
+        emit incValue();
+    }
 }
 
 void ImageArea::calcMinimumPercent()

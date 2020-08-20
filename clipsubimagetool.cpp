@@ -34,6 +34,8 @@ ClipSubImageTool::ClipSubImageTool(QWidget *parent)
     connect(m_horizon, SIGNAL(percentChanged(float)), m_imageArea, SLOT(percentChanged(float)));
     connect(m_imageArea, SIGNAL(notifyMinimumPercent(float)), m_horizon, SLOT(notifyMinimumPercent(float)));
     connect(m_vertical, SIGNAL(percentChanged(float)), this, SLOT(vertPercentChanged(float)));
+    connect(m_imageArea, SIGNAL(incValue()), m_horizon, SLOT(incValue()));
+    connect(m_imageArea, SIGNAL(decValue()), m_horizon, SLOT(decValue()));
 
     m_instruction->setText("竖的滚动条可以调整图片高度。\n开下一张会自动保存当前这张，如果不想保存就点放弃重开。");
     m_instruction->setWordWrap(true);
